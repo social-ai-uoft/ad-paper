@@ -1,7 +1,7 @@
 """Artificial-Dopamine Deep Q-Network (DQN) agent."""
-import os
 import random
 import time
+from pathlib import Path
 from collections import deque
 from functools import partial
 from typing import Any, Callable, Optional, Type, Union
@@ -642,9 +642,6 @@ class AD_DQN:
         )
 
         if save_checkpoints:
-            checkpoint_path = os.path.join(
-                writer.logdir, 'checkpoints', 'model_{step}.pt')
-
             # Save the model with the best performance on the evaluation environment every eval_frequency timesteps
             options = ocp.CheckpointManagerOptions(
                 max_to_keep=3,
@@ -653,7 +650,7 @@ class AD_DQN:
             )
 
             checkpoint_manager = ocp.CheckpointManager(
-                checkpoint_path,
+                (Path(writer.logdir) / 'checkpoints').absolute().as_posix(),
                 ocp.PyTreeCheckpointer(),
                 options,
             )

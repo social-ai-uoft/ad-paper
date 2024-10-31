@@ -10,9 +10,28 @@ A computational problem in biological reward-based learning is how credit assign
 
 ### Environment Setup
 
-Install the Poetry package manager and then run `poetry install` in the root directory of this repository. By default, JAX and PyTorch will be installed with CPU only support on MacOS and with GPU support on Linux. GPU support requires a compatible CUDA 11 installation, and is not available on MacOS.
+Install the Poetry package manager and then run `poetry install` in the root directory of this repository. By default, JAX and PyTorch will be installed with CPU only support. To install GPU support, run `poetry add jax --extras "cuda11"` manually. You'll need to change the CUDA version to match your system if you're using a different version.
 
 If using Visual Studio Code, we recommend installing the Python extension and setting the Python interpreter to the one managed by Poetry (which can be found by running `poetry env info` in the terminal).
+
+### Running an Experiment
+
+We provide a minimal training script in `scripts/train.py`. Hyperparameters are set to the reasonable defaults that we found to work well on
+MinAtar tasks. For example, to train an AD-DQN model on the BreakoutNoFrameskip-v4 environment, run:
+
+```bash
+poetry run python scripts/train.py BreakoutNoFrameskip-v4 ad_dqn
+```
+
+This script supports training a model with the standard AD-DQN algorithm and AD-QRDQN, its quantile regression variant.
+
+We use Weights and Biases (WandB) to log results, so you'll need to sign up for an account and run `poetry run wandb login` to authenticate. Once you've done that, you can view the results on the WandB dashboard by running `poetry run wandb ui` or by visiting the project page in your browser. Results are logged locally in the `runs` directory.
+
+See the script for more details, including how to change hyperparameters.
+
+## Results
+
+
 
 ## Citation
 

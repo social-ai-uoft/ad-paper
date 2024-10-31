@@ -67,17 +67,6 @@ typing-extensions = ">=4"
 tz = ["backports.zoneinfo"]
 
 [[package]]
-name = "appdirs"
-version = "1.4.4"
-description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
-optional = false
-python-versions = "*"
-files = [
-    {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
-    {file = "appdirs-1.4.4.tar.gz", hash = "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41"},
-]
-
-[[package]]
 name = "autorom"
 version = "0.4.2"
 description = "Automated installation of Atari ROMs for Gym/ALE-Py"
@@ -563,7 +552,7 @@ files = [
 [[package]]
 name = "dmc2gym"
 version = "1.0.0"
-description = ""
+description = "a gym like wrapper for dm_control"
 optional = false
 python-versions = "*"
 files = []
@@ -673,29 +662,34 @@ typing = ["typing-extensions (>=4.12.2)"]
 
 [[package]]
 name = "flax"
-version = "0.6.11"
+version = "0.10.0"
 description = "Flax: A neural network library for JAX designed for flexibility"
 optional = false
-python-versions = "*"
+python-versions = ">=3.10"
 files = [
-    {file = "flax-0.6.11-py3-none-any.whl", hash = "sha256:3ce6843ed47a35abfd86a7eb47db3934a156d08d6513dc8dcb58d461b0dd6f39"},
-    {file = "flax-0.6.11.tar.gz", hash = "sha256:ecedf179ceb16c0b511982a293834bb13086168dce1dff697ac083efa818fc72"},
+    {file = "flax-0.10.0-py3-none-any.whl", hash = "sha256:b3025c5c7d33ba400e123656ad66b0a1900ec67685365bf322ffa47c40a1d16c"},
+    {file = "flax-0.10.0.tar.gz", hash = "sha256:8025607abc6077e29554af00996041454e89d10d6d2939d7cb4b86ecbc3fe360"},
 ]
 
 [package.dependencies]
-jax = ">=0.4.2"
+jax = ">=0.4.27"
 msgpack = "*"
-numpy = ">=1.12"
+numpy = [
+    {version = ">=1.23.2", markers = "python_version >= \"3.11\""},
+    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
+]
 optax = "*"
 orbax-checkpoint = "*"
 PyYAML = ">=5.4.1"
 rich = ">=11.1"
 tensorstore = "*"
-typing-extensions = ">=4.1.1"
+typing-extensions = ">=4.2"
 
 [package.extras]
 all = ["matplotlib"]
-testing = ["atari-py (==0.2.5)", "clu", "einops", "gym (==0.18.3)", "jaxlib", "jraph (>=0.0.6dev0)", "ml-collections", "mypy", "nbstripout", "opencv-python", "pytest", "pytest-cov", "pytest-custom-exit-code", "pytest-xdist (==1.34.0)", "pytype", "sentencepiece", "tensorflow", "tensorflow-datasets", "tensorflow-text (>=2.11.0)", "torch"]
+dev = ["pre-commit (>=3.8.0)"]
+docs = ["Pygments (>=2.6.1)", "dm-haiku", "docutils (==0.16)", "einops", "ipykernel", "ipython-genutils", "jupytext (==1.13.8)", "matplotlib", "ml-collections", "myst-nb", "nbstripout", "recommonmark", "scikit-learn", "sphinx (>=3.3.1)", "sphinx-book-theme", "sphinx-design"]
+testing = ["cloudpickle (>=3.0.0)", "clu", "clu (<=0.0.9)", "einops", "gymnasium[accept-rom-license,atari]", "jaxlib", "jaxtyping", "jraph (>=0.0.6dev0)", "ml-collections", "mypy", "opencv-python", "pytest", "pytest-cov", "pytest-custom-exit-code", "pytest-xdist", "pytype", "sentencepiece", "tensorflow (>=2.12.0)", "tensorflow-datasets", "tensorflow-text (>=2.11.0)", "torch", "treescope (>=0.1.1)"]
 
 [[package]]
 name = "fonttools"
@@ -2494,8 +2488,8 @@ files = [
 
 [package.dependencies]
 numpy = [
-    {version = ">=1.22.4", markers = "python_version < \"3.11\""},
     {version = ">=1.23.2", markers = "python_version == \"3.11\""},
+    {version = ">=1.22.4", markers = "python_version < \"3.11\""},
     {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
 ]
 python-dateutil = ">=2.8.2"
@@ -2526,16 +2520,6 @@ spss = ["pyreadstat (>=1.2.0)"]
 sql-other = ["SQLAlchemy (>=2.0.0)", "adbc-driver-postgresql (>=0.8.0)", "adbc-driver-sqlite (>=0.8.0)"]
 test = ["hypothesis (>=6.46.1)", "pytest (>=7.3.2)", "pytest-xdist (>=2.2.0)"]
 xml = ["lxml (>=4.9.2)"]
-
-[[package]]
-name = "pathtools"
-version = "0.1.2"
-description = "File system general utilities"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pathtools-0.1.2.tar.gz", hash = "sha256:7c35c5421a39bb82e58018febd90e3b6e5db34c5443aaaf742b3f33d4655f1c0"},
-]
 
 [[package]]
 name = "pillow"
@@ -3785,41 +3769,49 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 
 [[package]]
 name = "wandb"
-version = "0.15.12"
+version = "0.18.5"
 description = "A CLI and library for interacting with the Weights & Biases API."
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 files = [
-    {file = "wandb-0.15.12-py3-none-any.whl", hash = "sha256:75c57b5bb8ddae21d45a02f644628585bdd112fea686de3177099a0996f1c41c"},
-    {file = "wandb-0.15.12.tar.gz", hash = "sha256:c344d92fb8044b072a6138afd9adc5d3801ad050cf11378fe2af2fe899dcca84"},
+    {file = "wandb-0.18.5-py3-none-any.whl", hash = "sha256:49ba7bafff0cecff2159bc6fb68176d6e5561d744a9bd6a63753e7077a74e26d"},
+    {file = "wandb-0.18.5-py3-none-macosx_10_13_x86_64.whl", hash = "sha256:c9d903dbff9517843881d9a0d561d82bcf0e949d8b8c03aafa35aceef31ea7e0"},
+    {file = "wandb-0.18.5-py3-none-macosx_11_0_arm64.whl", hash = "sha256:33d3e5765a9bb305558af4f291338cf8723856d2b3a3c377414cd8f8b711baa4"},
+    {file = "wandb-0.18.5-py3-none-macosx_11_0_x86_64.whl", hash = "sha256:9ff72e7a45e998e2a7ff42645ec76bedabf17ea51fd112ae2837dce5023ac0cc"},
+    {file = "wandb-0.18.5-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:136a79c06c114c225add8f977acec23d53df5e2a4d2803700a5eb5501ae40160"},
+    {file = "wandb-0.18.5-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:350fc0f6f5bc23f4baeef12ccfea6daa89d1a5b84948d72d48249cbb652ab22a"},
+    {file = "wandb-0.18.5-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:4e31741eefa2b2a83aa9f69ef27ce6112fee6f4c792a9e2996cf374a74465276"},
+    {file = "wandb-0.18.5-py3-none-win32.whl", hash = "sha256:b2a25e9caf63c12e5de1cbdb30b13f76553c04754f9ff404080f70386adb8384"},
+    {file = "wandb-0.18.5-py3-none-win_amd64.whl", hash = "sha256:83b619167eb2ffdd1188cba3805ccad158f6fd7fc06bef43daf6d2729a787fa0"},
+    {file = "wandb-0.18.5.tar.gz", hash = "sha256:75ef47ba7fc709b787be05e558f1635d99246afeacc9369031c1be6e5b620ce6"},
 ]
 
 [package.dependencies]
-appdirs = ">=1.4.3"
-Click = ">=7.1,<8.0.0 || >8.0.0"
+click = ">=7.1,<8.0.0 || >8.0.0"
 docker-pycreds = ">=0.4.0"
-GitPython = ">=1.0.0,<3.1.29 || >3.1.29"
-pathtools = "*"
-protobuf = {version = ">=3.19.0,<4.21.0 || >4.21.0,<5", markers = "python_version > \"3.9\" or sys_platform != \"linux\""}
+gitpython = ">=1.0.0,<3.1.29 || >3.1.29"
+platformdirs = "*"
+protobuf = {version = ">=3.19.0,<4.21.0 || >4.21.0,<5.28.0 || >5.28.0,<6", markers = "python_version > \"3.9\" or sys_platform != \"linux\""}
 psutil = ">=5.0.0"
-PyYAML = "*"
+pyyaml = "*"
 requests = ">=2.0.0,<3"
-sentry-sdk = ">=1.0.0"
+sentry-sdk = ">=2.0.0"
 setproctitle = "*"
 setuptools = "*"
+typing-extensions = {version = ">=4.4,<5", markers = "python_version < \"3.12\""}
 
 [package.extras]
-async = ["httpx (>=0.22.0)"]
 aws = ["boto3"]
 azure = ["azure-identity", "azure-storage-blob"]
 gcp = ["google-cloud-storage"]
+importers = ["filelock", "mlflow", "polars (<=1.2.1)", "rich", "tenacity"]
 kubeflow = ["google-cloud-storage", "kubernetes", "minio", "sh"]
-launch = ["PyYAML (>=6.0.0)", "awscli", "azure-containerregistry", "azure-identity", "azure-storage-blob", "boto3", "botocore", "chardet", "google-auth", "google-cloud-artifact-registry", "google-cloud-compute", "google-cloud-storage", "iso8601", "kubernetes", "nbconvert", "nbformat", "optuna", "typing-extensions"]
-media = ["bokeh", "moviepy", "numpy", "pillow", "plotly", "rdkit-pypi", "soundfile"]
+launch = ["awscli", "azure-containerregistry", "azure-identity", "azure-storage-blob", "boto3", "botocore", "chardet", "google-auth", "google-cloud-aiplatform", "google-cloud-artifact-registry", "google-cloud-compute", "google-cloud-storage", "iso8601", "jsonschema", "kubernetes", "kubernetes-asyncio", "nbconvert", "nbformat", "optuna", "pydantic", "pyyaml (>=6.0.0)", "tomli", "typing-extensions"]
+media = ["bokeh", "imageio", "moviepy", "numpy", "pillow", "plotly (>=5.18.0)", "rdkit", "soundfile"]
 models = ["cloudpickle"]
-nexus = ["wandb-core (>=0.16.0b1)"]
 perf = ["orjson"]
 sweeps = ["sweeps (>=0.2.0)"]
+workspaces = ["wandb-workspaces"]
 
 [[package]]
 name = "werkzeug"
@@ -3860,4 +3852,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "42e329f276374d83736485ff9b6a2926edf6febc698e88d5b43b2ddaa053b51a"
+content-hash = "7a74d7ec3184468875c62bc96b198cda3e90653bc5bb2230d394d14da0cc2e44"

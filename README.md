@@ -17,7 +17,7 @@ If using Visual Studio Code, we recommend installing the Python extension and se
 ### Running an Experiment
 
 We provide a minimal training script in `scripts/train.py`. Hyperparameters are set to the reasonable defaults that we found to work well on
-MinAtar tasks. For example, to train an AD-DQN model on the BreakoutNoFrameskip-v4 environment, run:
+MinAtar tasks. For example, to train an AD-DQN model on the `BreakoutNoFrameskip-v4 environment`, run:
 
 ```bash
 poetry run python scripts/train.py BreakoutNoFrameskip-v4 ad_dqn
@@ -31,6 +31,20 @@ See the script for more details, including how to change hyperparameters.
 
 ## Results
 
+We empirically evaluate our algorithm on MinAtar, the DeepMind Control Suite, and classic control task, and show it often achieves comparable performance to deep RL algorithms that use backpropagation. The figures below show the results of our experiments on MinAtar and the DeepMind Control Suite. See our paper for more details.
+
+### MinAtar & DeepMind Control Suite
+<p align="center">
+  <img src="./figures/results_addqn_minatar_dmc.png" width="80%">
+</p>
+<p align="center">
+  <img src="./figures/results_adqrdqn_dmc.png" width="80%">
+</p>
+
+### Classic Control Tasks
+<p align="center">
+  <img src="./figures/results_addqn_classic_control.png" width="80%">
+</p>
 
 
 ## Citation

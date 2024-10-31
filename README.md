@@ -10,7 +10,7 @@ A computational problem in biological reward-based learning is how credit assign
 
 ### Environment Setup
 
-Install the Poetry package manager and then run `poetry install` in the root directory of this repository.
+Install the Poetry package manager and then run `poetry install` in the root directory of this repository. By default, JAX and PyTorch will be installed with CPU only support on MacOS and with GPU support on Linux. GPU support requires a compatible CUDA 11 installation, and is not available on MacOS.
 
 If using Visual Studio Code, we recommend installing the Python extension and setting the Python interpreter to the one managed by Poetry (which can be found by running `poetry env info` in the terminal).
 

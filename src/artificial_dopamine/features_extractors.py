@@ -1,5 +1,4 @@
 """Shared features extractor modules for RL algorithms."""
-# NOTE: This is not really relevant anymore, because we're always flattening
 from abc import ABC, abstractmethod
 from functools import partial
 

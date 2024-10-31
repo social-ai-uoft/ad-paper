@@ -1,13 +1,13 @@
 """Utility functions."""
 from typing import Any, Callable, Literal, Optional, Union
 
-import gymnasium as gym
 import jax
 import jax.numpy as jnp
+import dmc2gym
+import gymnasium as gym
 from gymnasium import spaces
 from stable_baselines3.common.preprocessing import is_image_space
 
-import dmc2gym
 
 def linear_schedule(a: float, b: float, duration: int, t: int) -> float:
     """Linearly interpolate between `a` and `b` over `duration` steps.
@@ -106,10 +106,11 @@ class EnvSpec:
         vectorization_mode: One "sync" or "async", indicating whether to run
             environments synchronously (serially) or asynchronously (in
             parallel using multiple processes).
-        wrap_env_fn: A callable with the following signature::
+        wrap_env_fn: A callable with the following signature:
 
-            def wrap_env(env: gym.Env, env_spec: EnvSpec, index: int) -> gym.Env:
-                ...
+            .. code-block:: python
+                def wrap_env_fn(env: gym.Env, env_spec: EnvSpec, index: int) -> gym.Env:
+                    ...
 
             that wraps the environment in one or more wrappers. If ``None``,
             the identity function is used. This is applied after the environment
@@ -117,9 +118,10 @@ class EnvSpec:
             environment is wrapped in a :class:`gym.wrappers.RecordEpisodeStatistics`
             wrapper so there is no need to add this wrapper manually.
 
-        env_factory: A callable with the following signature::
+        env_factory: A callable with the following signature:
 
-             def make_env(
+            .. code-block:: python
+                def make_env(
                     env_spec: EnvSpec,
                     index: int,
                     record_video: bool = False,
@@ -240,57 +242,77 @@ class EnvSpec:
         run_log_dir: Optional[str] = None,
         seed: int = 0
     ) -> gym.Env:
-        """The default function for creating environments."""
-        if record_video and index == 0:
-            if env_spec.env_id=='walker':
-                env = dmc2gym.make(domain_name='walker', task_name='walk', discrete=True)
-            elif env_spec.env_id == 'runner':
-                env = dmc2gym.make(domain_name='walker', task_name='run', discrete=True)
-            elif env_spec.env_id=='cheetah':
-                env = dmc2gym.make(domain_name='cheetah', task_name='run', discrete=True)
-            elif env_spec.env_id == 'reacher_easy':
-                env = dmc2gym.make(domain_name='reacher', task_name='easy', discrete=True)
-            elif env_spec.env_id == 'reacher_hard':
-                env = dmc2gym.make(domain_name='reacher', task_name='hard', discrete=True)
-            elif env_spec.env_id=='hopper':
-                env = dmc2gym.make(domain_name='hopper', task_name='hop', discrete=True)
-            elif env_spec.env_id=='fish':
-                env = dmc2gym.make(domain_name='fish', task_name='swim', discrete=True)
-            elif env_spec.env_id == 'acrobot':
-                env = dmc2gym.make(domain_name='acrobot', task_name='swingup', discrete=True)
-            elif env_spec.env_id=='quadruped':
-                env = dmc2gym.make(domain_name='quadruped', task_name='run', discrete=True)
+        """The default function for creating environments.
+
+        Supports both Gym and DeepMind Control Suite environments. In specific,
+        the following DeepMind Control Suite domains are supported, which are
+        discretized versions of the original continuous control tasks:
+
+        * walker    (walker/walk)
+        * runner    (walker/run)
+        * cheetah   (cheetah/run)
+        * reacher   (reacher/easy, reacher/hard)
+        * hopper    (hopper/hop)
+        * fish      (fish/swim)
+        * acrobot   (acrobot/swingup)
+        * quadruped (quadruped/run)
+
+        All other environments are created using Gym.
+
+        Args:
+            env_spec: The environment specification.
+            index: The index of the environment.
+            record_video: Whether to record a video of the environment.
+            record_video_freq: The frequency at which to record videos.
+            run_log_dir: The directory where the video will be saved.
+            seed: The seed to use for the environment.
+
+        Returns:
+            The created Gym environment.
+        """
+        # Map environment IDs to DeepMind Control Suite domain-task pairs
+        DMC_ENVS = {
+            'walker': ('walker', 'walk'),
+            'runner': ('walker', 'run'),
+            'cheetah': ('cheetah', 'run'),
+            'reacher_easy': ('reacher', 'easy'),
+            'reacher_hard': ('reacher', 'hard'),
+            'hopper': ('hopper', 'hop'),
+            'fish': ('fish', 'swim'),
+            'acrobot': ('acrobot', 'swingup'),
+            'quadruped': ('quadruped', 'run')
+        }
+
+        # A thunk to create the environment
+        def _make_env(render: bool = False) -> gym.Env:
+            """Create the environment.
+
+            Args:
+                render: Whether to render the environment or not. When True,
+                    the `render_mode` is set to `rgb_array`. Default: False.
+
+            Returns:
+                The created environment.
+            """
+            if env_spec.env_id in DMC_ENVS:
+                domain_name, task_name = DMC_ENVS[env_spec.env_id]
+                return dmc2gym.make(
+                    domain_name=domain_name, task_name=task_name, discrete=True)
             else:
-                env = gym.make(env_spec.env_id, render_mode='rgb_array',
-                               **env_spec.init_kwargs)
+                kwargs = {'render_mode': 'rgb_array'} if render else {}
+                return gym.make(env_spec.env_id, **kwargs, **env_spec.init_kwargs)
+
+        # Create the environment, wrap it in a RecordVideo wrapper if needed
+        if record_video and index == 0:
             env = gym.wrappers.RecordVideo(
-                env,
+                _make_env(render=True),
                 f'{run_log_dir}/videos/',
                 disable_logger=True,
                 episode_trigger=(lambda x: x % record_video_freq == 0)
                 if record_video_freq is not None else None
             )
         else:
-            if env_spec.env_id=='walker':
-                env = dmc2gym.make(domain_name='walker', task_name='walk', discrete=True)
-            elif env_spec.env_id == 'runner':
-                env = dmc2gym.make(domain_name='walker', task_name='run', discrete=True)
-            elif env_spec.env_id=='cheetah':
-                env = dmc2gym.make(domain_name='cheetah', task_name='run', discrete=True)
-            elif env_spec.env_id == 'reacher_easy':
-                env = dmc2gym.make(domain_name='reacher', task_name='easy', discrete=True)
-            elif env_spec.env_id == 'reacher_hard':
-                env = dmc2gym.make(domain_name='reacher', task_name='hard', discrete=True)
-            elif env_spec.env_id=='hopper':
-                env = dmc2gym.make(domain_name='hopper', task_name='hop', discrete=True)
-            elif env_spec.env_id=='fish':
-                env = dmc2gym.make(domain_name='fish', task_name='swim', discrete=True)
-            elif env_spec.env_id == 'acrobot':
-                env = dmc2gym.make(domain_name='acrobot', task_name='swingup', discrete=True)
-            elif env_spec.env_id=='quadruped':
-                env = dmc2gym.make(domain_name='quadruped', task_name='run', discrete=True)
-            else:
-                env = gym.make(env_spec.env_id, **env_spec.init_kwargs)
+            env = _make_env(render=False)
 
         if env_spec.env_id.startswith('MiniGrid'):
             from gym_minigrid.wrappers import ImgObsWrapper
@@ -299,4 +321,5 @@ class EnvSpec:
         env = gym.wrappers.RecordEpisodeStatistics(env)
         env = env_spec.wrap_env_fn(env, env_spec, index)
         env.action_space.seed(seed + index)
+
         return env

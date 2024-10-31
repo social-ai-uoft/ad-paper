@@ -2,7 +2,7 @@
 name = "artificial-dopamine"
 version = "1.0.0"
 description = "Temporal-Difference Learning Using Distributed Error Signals"
-authors = ["Jonas Guan", "Shon Verch <shon.verch@mail.utoronto.ca>", "Claas A Voelcker", "Ethan C. Jackson", "Nicolas Papernot", "William A. Cunningham"]
+authors = ["Jonas Guan", "Shon Eduard Verch <shon.verch@mail.utoronto.ca>", "Claas A Voelcker", "Ethan C. Jackson", "Nicolas Papernot", "William A. Cunningham"]
 license = "MIT"
 keywords = ["machine-learning", "deep-learning", "reinforcement-learning"]
 readme = "README.md"
@@ -29,15 +29,22 @@ tqdm = "^4.65.0"
 tensorboardx = "^2.6"
 gymnasium = {version = "^0.28.1", extras = ["box2d", "atari", "accept-rom-license"]}
 tabulate = "^0.9.0"
-torch = { version = "^2.0.1+cu118", source = "torch_cu118" }
-torchvision = { version = "^0.15.2+cu118", source = "torch_cu118" }
-torchaudio = { version = "^2.0.2+cu118", source = "torch_cu118" }
-jax = {version = "^0.4.11", extras = ["cuda11_pip"], source = "jax"}
+
+torch = "^2.5.1"
+torchvision = "^0.20.1"
+torchaudio = "^2.5.1"
+jax = [
+    {extras = ["cpu"], version = "^0.4.11", source="pypi", markers = "sys_platform == 'darwin'"},
+    {extras = ["cuda11_pip"], version = "^0.4.11", source = "jax_cuda", markers = "sys_platform == 'linux'"},
+]
+
 sb3-contrib = ">=2.0.0a9"
 wandb = "^0.15.3"
 moviepy = "^1.0.3"
 optuna = "^3.2.0"
 minatar = "^1.0.15"
+dmc2gym = {git = "https://github.com/denisyarats/dmc2gym.git"}
+gym-minigrid = "^1.2.2"
 
 [tool.poetry.dev-dependencies]
 
@@ -76,8 +83,8 @@ build-backend = "poetry.core.masonry.api"
 skip = "./tests/**/*,./poetry.lock"
 
 [tool.pyright]
-include = ["gator/**", "tests/**"]
-exclude = ["**/__pycache__", "src/gator/_vendor/**"]
+include = ["src/**", "tests/**"]
+exclude = ["**/__pycache__", "src/_vendor/**"]
 
 typeCheckingMode = "off"
 pythonVersion = "3.9"

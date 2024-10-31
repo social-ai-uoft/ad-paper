@@ -155,11 +155,9 @@ class TrajectoryReplayBuffer(ReplayBuffer):
         ).T
 
         if self.optimize_memory_usage:
-            # TODO: implement sampling when `optimize_memory_usage` is True
             raise NotImplementedError(
                 'Sampling is not implemented when `optimize_memory_usage` is True'
             )
-            # next_obs = self._normalize_obs(self.observations[(batch_inds + 1) % self.buffer_size, env_inds, :], env)
         else:
             next_obs = self._normalize_obs(self.next_observations[seq_inds, env_inds, :], env)
 

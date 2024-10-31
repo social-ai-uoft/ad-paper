@@ -1,0 +1,96 @@
+[tool.poetry]
+name = "artificial-dopamine"
+version = "1.0.0"
+description = "Temporal-Difference Learning Using Distributed Error Signals"
+authors = ["Jonas Guan", "Shon Verch <shon.verch@mail.utoronto.ca>", "Claas A Voelcker", "Ethan C. Jackson", "Nicolas Papernot", "William A. Cunningham"]
+license = "MIT"
+keywords = ["machine-learning", "deep-learning", "reinforcement-learning"]
+readme = "README.md"
+
+# Include the typings directory in the package
+packages = [
+    { include = "artificial_dopamine", from = "src" }
+]
+include = [
+    { path = "tests", format = "sdist" }
+]
+exclude = [
+    "**/*.pyc",
+    "**/*.pyi",
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flax = "^0.6.10"
+optax = "^0.1.5"
+tensorboard = "^2.13.0"
+rich = "^13.3.5"
+tqdm = "^4.65.0"
+tensorboardx = "^2.6"
+gymnasium = {version = "^0.28.1", extras = ["box2d", "atari", "accept-rom-license"]}
+tabulate = "^0.9.0"
+torch = { version = "^2.0.1+cu118", source = "torch_cu118" }
+torchvision = { version = "^0.15.2+cu118", source = "torch_cu118" }
+torchaudio = { version = "^2.0.2+cu118", source = "torch_cu118" }
+jax = {version = "^0.4.11", extras = ["cuda11_pip"], source = "jax"}
+sb3-contrib = ">=2.0.0a9"
+wandb = "^0.15.3"
+moviepy = "^1.0.3"
+optuna = "^3.2.0"
+minatar = "^1.0.15"
+
+[tool.poetry.dev-dependencies]
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+
+[[tool.poetry.source]]
+name = "jax_cuda"
+url = "https://storage.googleapis.com/jax-releases/jax_cuda_releases.html"
+priority = "supplemental"
+
+
+[[tool.poetry.source]]
+name = "jax"
+url = "https://storage.googleapis.com/jax-releases/jax_releases.html"
+priority = "supplemental"
+
+
+[[tool.poetry.source]]
+name = "torch_cu118"
+url = "https://download.pytorch.org/whl/cu118"
+priority = "supplemental"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.1"
+pre-commit = "^3.3.2"
+tomli = "^2.0.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.codespell]
+skip = "./tests/**/*,./poetry.lock"
+
+[tool.pyright]
+include = ["gator/**", "tests/**"]
+exclude = ["**/__pycache__", "src/gator/_vendor/**"]
+
+typeCheckingMode = "off"
+pythonVersion = "3.9"
+pythonPlatform = "All"
+typeshedPath = "typeshed"
+enableTypeIgnoreComments = true
+
+# This is required as the CI pre-commit does not download required modules
+reportMissingImports = "none"
+
+[tool.autopep8]
+max_line_length = 120
+ignore = "E501,W6"  # or ["E501", "W6"]
+in-place = true
+recursive = true
+aggressive = 3

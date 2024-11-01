@@ -30,7 +30,7 @@ See the script for more details, including how to change hyperparameters.
 
 ## Results
 
-We empirically evaluate our algorithm on MinAtar, the DeepMind Control Suite, and classic control task, and show it often achieves comparable performance to deep RL algorithms that use backpropagation. The figures below show the results of our experiments on MinAtar and the DeepMind Control Suite. See our paper for more details.
+We empirically evaluate our algorithm on MinAtar, the DeepMind Control Suite, and classic control tasks, and show it often achieves comparable performance to deep RL algorithms that use backpropagation. The figures below show the results of our experiments on MinAtar and the DeepMind Control Suite. See our paper for more details.
 
 ### MinAtar & DeepMind Control Suite
 <p align="center">

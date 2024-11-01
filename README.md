@@ -1,4 +1,4 @@
-# Temporal-Difference Learning Using Distributed Error Signals
+# [Temporal-Difference Learning Using Distributed Error Signals](paperURL)
 
 Jonas Guan, Shon Eduard Verch, Claas Voelcker, Ethan C. Jackson, Nicolas Papernot, William A. Cunningham
 
@@ -30,7 +30,7 @@ See the script for more details, including how to change hyperparameters.
 
 ## Results
 
-We empirically evaluate our algorithm on MinAtar, the DeepMind Control Suite, and classic control tasks, and show it often achieves comparable performance to deep RL algorithms that use backpropagation. The figures below show the results of our experiments on MinAtar tasks, the DeepMind Control Suite, and Gymnasium classic control tasks. See our paper for more details.
+We empirically evaluate our algorithm on MinAtar, the DeepMind Control Suite, and classic control tasks, and show it often achieves comparable performance to deep RL algorithms that use backpropagation. The figures below show the results of our experiments on MinAtar tasks, the DeepMind Control Suite, and Gymnasium classic control tasks. See our [paper](paperURL) for more details.
 
 ### MinAtar & DeepMind Control Suite
 <p align="center">
@@ -56,6 +56,7 @@ If you find our work useful or relevant to your research, please kindly cite our
     author={Guan, Jonas and Verch, Shon and Voelcker, Claas A and Jackson, Ethan C and Papernot, Nicolas and Cunningham, William},
     journal={Advances in Neural Information Processing Systems},
     volume={38},
-    year={2024}
+    year={2024},
+    url={paperURL}
 }
 ```

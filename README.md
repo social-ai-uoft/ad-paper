@@ -16,11 +16,10 @@ If using Visual Studio Code, we recommend installing the Python extension and se
 
 ### Running an Experiment
 
-We provide a minimal training script in `scripts/train.py`. Hyperparameters are set to the reasonable defaults that we found to work well on
-MinAtar tasks. For example, to train an AD-DQN model on the `BreakoutNoFrameskip-v4 environment`, run:
+We provide a minimal training script in `scripts/train.py`. For example, to train an AD-DQN model on the `CartPole-v1 environment`, run:
 
 ```bash
-poetry run python scripts/train.py BreakoutNoFrameskip-v4 ad_dqn
+poetry run python scripts/train.py CartPole-v1 ad_dqn
 ```
 
 This script supports training a model with the standard AD-DQN algorithm and AD-QRDQN, its quantile regression variant.

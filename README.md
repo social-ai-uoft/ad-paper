@@ -1,4 +1,4 @@
-# [Temporal-Difference Learning Using Distributed Error Signals](paperURL)
+# Temporal-Difference Learning Using Distributed Error Signals [[paper](paperURL)]
 
 Jonas Guan, Shon Eduard Verch, Claas Voelcker, Ethan C. Jackson, Nicolas Papernot, William A. Cunningham
 

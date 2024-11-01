@@ -28,18 +28,18 @@ def get_args() -> argparse.Namespace:
         help='Algorithm to use. Choose from: ad_dqn, ad_qrdqn')
     # Model hyperparameters
     parser.add_argument(
-        '--net_arch', type=int, nargs='+', default=[400, 200, 200],
+        '--net_arch', type=int, nargs='+', default=[128, 96, 96],
         help='Number of units in each hidden layer')
     parser.add_argument(
         '--seed', type=int, default=1977, help='Random seed')
     parser.add_argument(
-        '--num_eval_episodes', type=int, default=100,
+        '--num_eval_episodes', type=int, default=10,
         help='Number of episodes of policy evaluation')
     parser.add_argument(
-        '--total_timesteps', type=int, default=5_000_000,
+        '--total_timesteps', type=int, default=4_000_000,
         help='Total number of timesteps to train the agent for')
     parser.add_argument(
-        '--eval_frequency', type=int, default=100_000,
+        '--eval_frequency', type=int, default=1_000_000,
         help='Frequency at which to evaluate the policy')
 
     return parser.parse_args()
@@ -49,31 +49,10 @@ def main() -> None:
     """Script entry point."""
     args = get_args()
 
-    # Define LR schedule, which linearly increases from 0 to `base_learning_rate`
-    # over the first `lr_warmup_steps` steps, and then cosine decays to 0 over
-    # the remaining steps.
-    base_learning_rate = 1e-4
-    lr_warmup_steps = 500_000
-    lr_schedule = optax.join_schedules(
-        schedules=[
-            # Warmup - linearly increase the learning rate from 0 to
-            # ``base_learning_rate`` over the first ``lr_warmup_steps`` steps
-            optax.linear_schedule(
-                init_value=0., end_value=base_learning_rate,
-                transition_steps=lr_warmup_steps),
-            # Annealing - cosine decay the learning rate over remaining steps
-            optax.cosine_decay_schedule(
-                init_value=base_learning_rate,
-                decay_steps=max(3e-5, args.total_timesteps - lr_warmup_steps),
-            )
-        ],
-        boundaries=[lr_warmup_steps]
-    )
-
     # Define model hyperparameters
     model_kwargs = dict(
         # Network architecture configuration
-        net_arch=[400, 200, 200],
+        net_arch=[128, 96, 96],
         input_skip_connections=True,
         recurrent_connections=True,
         backward_connections=True,
@@ -83,17 +62,17 @@ def main() -> None:
         context_size=10,
         context_accumulation_alpha=1.0,  # Hard update, no accumulation
         # Training configuration
-        learning_rate=lr_schedule,
+        learning_rate=2.5e-4,
         huber_loss=False,  # Use standard MSE loss
-        buffer_size=5_000_000,
+        buffer_size=4_000_000,
         target_network_frequency=1000,
         max_grad_norm=1.0,
         batch_size=512,
         start_eps=1.0,
         end_eps=0.01,
         exploration_fraction=0.1,
-        learning_starts=20_000,
-        train_frequency=4,
+        learning_starts=50_000,
+        train_frequency=2,
         seed=args.seed,
         double_q=True,
         gamma=0.99

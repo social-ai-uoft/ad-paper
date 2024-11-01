@@ -61,7 +61,7 @@ class AD_QRDQN:
     helped: using a larger batch size, updating the target network less
     frequently, and annealing the learning rate over time.
 
-    When `backward_connections` is `True`, layers are connected to the
+    When `forward_connections` is `True`, layers are connected to the
     layer that precedes them in the network, with activations from layer
     :math:`i` being concatenated to the input of layer :math:`i + 1`.
     Similarly, when `recurrent_connections` is `True`, activations from
@@ -85,15 +85,15 @@ class AD_QRDQN:
             data to each layer. Default: ``False``.
         recurrent_connections: Whether to use recurrent connections between
             layers. Default: ``False``.
-        backward_connections: Whether to use backward connections between
+        forward_connections: Whether to use forward connections between
             layers. Default: ``True``.
         recurrent_weight: The weight to use for recurrent connections.
             Default: ``1.0``.
-        backward_weight: The weight to use for backward connections.
+        forward_conn_weight: The weight to use for forward connections.
             Default: ``1.0``.
         context_size: The number of previous activations to use as context
             for the AD layers. This will be ignored if
-            there are no recurrent or backward connections. Default: 10.
+            there are no recurrent or forward connections. Default: 10.
         context_accumulation_alpha: The weight to use for the context
             accumulation. This is a float between 0 and 1. A value of 0
             means that the context will not be accumulated at all (reset to
@@ -152,9 +152,9 @@ class AD_QRDQN:
             num_quantiles: int = 200,
             input_skip_connections: bool = False,
             recurrent_connections: bool = False,
-            backward_connections: bool = True,
+            forward_connections: bool = True,
             recurrent_weight: float = 1.0,
-            backward_weight: float = 1.0,
+            forward_conn_weight: float = 1.0,
             context_size: int = 10,
             context_accumulation_alpha: float = 0.7,
             average_predictions: bool = True,
@@ -213,10 +213,10 @@ class AD_QRDQN:
 
         self.input_skip_connections = input_skip_connections
         self.recurrent_connections = recurrent_connections
-        self.backward_connections = backward_connections
+        self.forward_connections = forward_connections
         self.recurrent_weight = recurrent_weight
-        self.backward_weight = backward_weight
-        self.context_size = context_size if recurrent_connections or backward_connections else 0
+        self.forward_conn_weight = forward_conn_weight
+        self.context_size = context_size if recurrent_connections or forward_connections else 0
         self.context_accumulation_alpha = context_accumulation_alpha
         self.average_predictions = average_predictions
 
@@ -237,7 +237,7 @@ class AD_QRDQN:
                 # receives H_{t-1}^{i} as an additional input
                 dummy_x_size += hidden_size
 
-            if self.backward_connections and i < len(net_arch) - 1:
+            if self.forward_connections and i < len(net_arch) - 1:
                 # Layer `i` has connection with the next layer in the past,
                 # and receives H_{t-1}^{i+1} as an additional input
                 dummy_x_size += net_arch[i + 1]
@@ -439,7 +439,7 @@ class AD_QRDQN:
 
         Returns:
             The input to the given layer, which is the concatenation of the
-            input data and any additional recurrent or backward connections.
+            input data and any additional recurrent or forward connections.
         """
         # Add temporal encoding from timestep t
         h_in = [h]
@@ -453,10 +453,10 @@ class AD_QRDQN:
             recurrent_act = last_activations[layer_index]
             h_in.append(self.recurrent_weight * recurrent_act)
 
-        if self.backward_connections and layer_index < self.num_layers - 1:
-            # Add the backward connection from the past
-            backward_act = last_activations[layer_index + 1]
-            h_in.append(self.backward_weight * backward_act)
+        if self.forward_connections and layer_index < self.num_layers - 1:
+            # Add the forward connection from the past
+            forward_act = last_activations[layer_index + 1]
+            h_in.append(self.forward_conn_weight * forward_act)
 
         return jnp.concatenate(h_in, axis=-1)
 

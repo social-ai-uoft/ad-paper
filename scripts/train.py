@@ -55,7 +55,7 @@ def main() -> None:
         net_arch=[128, 96, 96],
         input_skip_connections=True,
         recurrent_connections=True,
-        backward_connections=True,
+        forward_connections=True,
         average_predictions=True,  # Final prediction is the average of all layers
         layer_cls=ad.AttentionADCell,  # Use the attention layer
         # Inference configuration
